@@ -1,0 +1,29 @@
+﻿<Window x:Class="writer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:local="clr-namespace:writer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1200" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <avalonEdit:TextEditor
+				Name="Editor"
+				FontFamily="Consolas"
+				FontSize="12pt"
+				SyntaxHighlighting="Writer"
+             xml:space="preserve">The app highlights lengthy, complex sentences and common errors; if you see a yellow sentence, shorten or split it. If you see a red highlight, your sentence is so dense and complicated that your readers will get lost trying to follow its meandering, splitting logic — try editing this sentence to remove the red.
+
+You can utilize a shorter word in place of a purple one. Mouse over them for hints.
+
+Adverbs and weakening phrases are helpfully shown in blue. Get rid of them and pick words with force, perhaps.
+
+Phrases in green have been marked to show passive voice.
+
+You can format your text with the toolbar.
+
+Paste in something you're working on and edit away. Or, click the Write button and compose something new.
+        </avalonEdit:TextEditor>
+    </Grid>
+</Window>
