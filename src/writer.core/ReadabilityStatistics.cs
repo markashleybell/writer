@@ -6,18 +6,22 @@ namespace writer.core
 {
     public class ReadabilityStatistics
     {
-        public ReadabilityStatistics(
+        internal ReadabilityStatistics(
             int characters,
             int letters,
             int sentences,
             int words,
-            int paragraphs)
+            int paragraphs,
+            double readability,
+            AutomatedReadabilityIndexGrade readbilityGrade)
         {
             Characters = characters;
             Letters = letters;
             Sentences = sentences;
             Words = words;
             Paragraphs = paragraphs;
+            Readability = readability;
+            ReadabilityGrade = readbilityGrade;
         }
 
         public int Characters { get; }
@@ -29,5 +33,9 @@ namespace writer.core
         public int Words { get; }
 
         public int Paragraphs { get; }
+
+        public double Readability { get; }
+
+        public AutomatedReadabilityIndexGrade ReadabilityGrade { get; }
     }
 }

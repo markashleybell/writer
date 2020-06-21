@@ -16,28 +16,28 @@ void Main()
 {
     var workingDirectory = Path.GetDirectoryName(Util.CurrentQueryPath);
 
-    var highlightingDefinitionFilePath = workingDirectory + @"\..\src\writer\Highlighting.xshd";
-
-    IHighlightingDefinition highlightingDefinition;
-
-    using (var reader = new XmlTextReader(File.OpenRead(highlightingDefinitionFilePath)))
-    {
-        highlightingDefinition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-    }
-
-    // highlightingDefinition.Dump();
-
-    HighlightingManager.Instance.RegisterHighlighting(
-        name: "Writer",
-        extensions: new[] { ".writer", ".txt" },
-        highlighting: highlightingDefinition
-    );
+//    var highlightingDefinitionFilePath = workingDirectory + @"\..\src\writer\Highlighting.xshd";
+//
+//    IHighlightingDefinition highlightingDefinition;
+//
+//    using (var reader = new XmlTextReader(File.OpenRead(highlightingDefinitionFilePath)))
+//    {
+//        highlightingDefinition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+//    }
+//
+//    // highlightingDefinition.Dump();
+//
+//    HighlightingManager.Instance.RegisterHighlighting(
+//        name: "Writer",
+//        extensions: new[] { ".writer", ".txt" },
+//        highlighting: highlightingDefinition
+//    );
 
     var editor = new TextEditor();
     
     editor.WordWrap = true;
     editor.Height = 400;
-    editor.SyntaxHighlighting = highlightingDefinition;
+    // editor.SyntaxHighlighting = highlightingDefinition;
     
     editor.TextArea.TextView.LineTransformers.RemoveAt(0);
     

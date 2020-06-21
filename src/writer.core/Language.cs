@@ -569,25 +569,107 @@ namespace writer.core
 
         public static ReadabilityStatistics GetReadability(this string text)
         {
-            /*
-            RE = 206.835 – (1.015 x ASL) – (84.6 x ASW)
-
-            RE = Readability Ease
-
-            ASL = Average Sentence Length (i.e., the number of words divided by the number of sentences)
-
-            ASW = Average number of syllables per word (i.e., the number of syllables divided by the number of words)
-            */
-
             const StringSplitOptions splitOpts = StringSplitOptions.RemoveEmptyEntries;
 
-            return new ReadabilityStatistics(
-                characters: text.Count(c => !char.IsControl(c)),
-                letters: text.Count(c => char.IsLetter(c)),
-                sentences: text.Split(SentenceSeparators, splitOpts).Length,
-                words: text.Split(WordSeparators, splitOpts).Length,
-                paragraphs: text.Split(ParagraphSeparators, splitOpts).Length
-            );
+            var characters = text.Count(c => !char.IsControl(c));
+            var letters = text.Count(c => char.IsLetter(c));
+            var sentences = text.Split(SentenceSeparators, splitOpts).Length;
+            var words = text.Split(WordSeparators, splitOpts).Length;
+            var paragraphs = text.Split(ParagraphSeparators, splitOpts).Length;
+
+            // var syllables = text.CountSyllables();
+
+            // var (readability, grade) = CalculateFleschKincaidReadingEase(sentences, words, syllables);
+
+            var (readability, grade) = CalculateAutomatedReadbilityIndex(sentences, words, letters);
+
+            return new ReadabilityStatistics(characters, letters, sentences, words, paragraphs, readability, grade);
+        }
+
+        public static (double value, AutomatedReadabilityIndexGrade grade) CalculateAutomatedReadbilityIndex(
+            int sentenceCount,
+            int wordCount,
+            int letterCount)
+        {
+            /*
+            https://en.wikipedia.org/wiki/Automated_readability_index
+
+            DO NOT REMOVE EXPLICIT DOUBLE CASTS!
+
+            Visual Studio reports them as "unnecessary", but removing them will break the
+            result completely as the calculation is then done with integer values...
+            */
+
+            var averageWordsPerSentence = (double)wordCount / sentenceCount;
+
+            var averageCharactersPerWord = (double)letterCount / wordCount;
+
+            var value = (4.71 * averageCharactersPerWord) + (0.5 * averageWordsPerSentence) - 21.43;
+
+            var roundedValue = (int)Math.Round(value);
+
+            return (value, (AutomatedReadabilityIndexGrade)roundedValue);
+        }
+
+        public static (double value, FleschKincaidReadingEaseGrade grade) CalculateFleschKincaidReadingEase(
+            int sentenceCount,
+            int wordCount,
+            int syllableCount)
+        {
+            /*
+            https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
+
+            DO NOT REMOVE EXPLICIT DOUBLE CASTS!
+
+            Visual Studio reports them as "unnecessary", but removing them will break the
+            result completely as the calculation is then done with integer values...
+            */
+
+            var averageWordsPerSentence = (double)wordCount / sentenceCount;
+
+            var averageSyllablesPerWord = (double)syllableCount / wordCount;
+
+            var value = 206.835 - (1.015 * averageWordsPerSentence) - (84.6 * averageSyllablesPerWord);
+
+            // Start at the lowest (worst) grade, then work up
+            var grade = FleschKincaidReadingEaseGrade.Professional;
+
+            if (value >= 10)
+            {
+                grade = FleschKincaidReadingEaseGrade.CollegeGraduate;
+            }
+
+            if (value >= 30)
+            {
+                grade = FleschKincaidReadingEaseGrade.College;
+            }
+
+            if (value >= 50)
+            {
+                grade = FleschKincaidReadingEaseGrade.Grade10To12;
+            }
+
+            if (value >= 60)
+            {
+                grade = FleschKincaidReadingEaseGrade.Grade8To9;
+            }
+
+            if (value >= 70)
+            {
+                grade = FleschKincaidReadingEaseGrade.Grade7;
+            }
+
+            if (value >= 80)
+            {
+                grade = FleschKincaidReadingEaseGrade.Grade6;
+            }
+
+            if (value >= 90)
+            {
+                grade = FleschKincaidReadingEaseGrade.Grade5;
+            }
+
+            return (value, grade);
         }
     }
 }

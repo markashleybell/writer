@@ -5,7 +5,7 @@
 
 void Main()
 {
-    var words = new[] {
+    var testWords = new[] {
         "one",
         "apples",
         "oranges",
@@ -15,7 +15,7 @@ void Main()
         "multidimensional"
     };
 
-    // words.Select(w => (w, w.CountSyllables())).Dump();
+    // testWords.Select(w => (w, w.CountSyllables())).Dump();
 
     var text = @"
 Hemingway App makes your writing bold and clear.
@@ -34,6 +34,8 @@ Paste in something you're working on and edit away. Or, click the Write button a
 
 
     text.GetReadability().Dump();
+    
+    // Language.CalculateFleschKincaidReadingEase(11, 133, text.CountSyllables()).Dump();
 }
 
 public static class Extensions 
