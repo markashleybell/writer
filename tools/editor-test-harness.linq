@@ -39,6 +39,9 @@ void Main()
     editor.Height = 400;
     // editor.SyntaxHighlighting = highlightingDefinition;
     
+    editor.FontFamily = new FontFamily("Consolas");
+    editor.FontSize = 16;
+    
     editor.TextArea.TextView.LineTransformers.RemoveAt(0);
     
     editor.TextArea.TextView.LineTransformers.Insert(0, new WriterColorizingTransformer());
@@ -70,10 +73,49 @@ public class WriterColorizingTransformer : DocumentColorizingTransformer
     {
         // Transform(line, "passive", el => el.TextRunProperties.SetBackgroundBrush(Brushes.LightGreen));
         
-        Temp(line);
+        Readability(line);
+        
+        PassiveVoice(line);
     }
 
-    private void Temp(DocumentLine line)
+    private void Readability(DocumentLine line)
+    {
+        var lineText = CurrentContext.Document.GetText(line);
+        
+        var start = 0;
+        var index = 0;
+
+        while ((index = lineText.IndexOfAny(SentenceSeparators, start)) >= 0)
+        {
+            var sentence = lineText.Substring(start, (index + 1) - start);
+            
+            var score = sentence.GetReadability();
+
+            if (score.Words > 13)
+            { 
+                (sentence, score).Dump();
+                
+                var brush = score.Readability > 14 ? Brushes.LightCoral : Brushes.PaleGoldenrod;
+    
+                base.ChangeLinePart(
+                    startOffset: line.Offset + start,
+                    endOffset: line.Offset + index + 1,
+                    action: el => el.TextRunProperties.SetBackgroundBrush(brush)
+                );
+            }
+
+            // Start after the sentence separator character
+            start = index + 1;
+
+            // Move forward until we're at the next letter (start of next sentence)
+            while (start < lineText.Length && !char.IsLetterOrDigit(lineText[start]))
+            {
+                start++;
+            }
+        }
+    }
+
+    private void PassiveVoice(DocumentLine line)
     {
         var lineText = CurrentContext.Document.GetText(line);
         
@@ -103,10 +145,6 @@ public class WriterColorizingTransformer : DocumentColorizingTransformer
                 action: el => el.TextRunProperties.SetBackgroundBrush(Brushes.LightGreen)
             );
         }
-    }
-
-    private void PatternTransform(DocumentLine line, string pattern, Action<VisualLineElement> transform)
-    {
     }
 
     private void Transform(DocumentLine line, string text, Action<VisualLineElement> transform)

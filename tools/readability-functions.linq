@@ -33,9 +33,16 @@ You can format your text with the toolbar.
 Paste in something you're working on and edit away. Or, click the Write button and compose something new.";
 
 
-    text.GetReadability().Dump();
+    // text.GetReadability().Dump();
     
     // Language.CalculateFleschKincaidReadingEase(11, 133, text.CountSyllables()).Dump();
+    
+    var s1 = "The app highlights lengthy, complex sentences and common errors; if you see a yellow sentence, shorten or split it.";
+    var s2 = "The app highlights lengthy, complex sentences and common errors.";
+    
+    
+    s1.GetReadability().Dump();
+    s2.GetReadability().Dump();
 }
 
 public static class Extensions 

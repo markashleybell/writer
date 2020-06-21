@@ -7,6 +7,8 @@ namespace writer.core
 {
     public static class Language
     {
+        public const StringSplitOptions NoEmptyEntries = StringSplitOptions.RemoveEmptyEntries;
+
         public const string PassiveSuffixPattern = "ed";
 
         public static readonly Regex PassiveVoicePattern =
@@ -567,26 +569,39 @@ namespace writer.core
             return syllables;
         }
 
+        public static string[] GetParagraphs(this string text) =>
+             text.Split(ParagraphSeparators, NoEmptyEntries);
+
+        public static string[] GetSentences(this string text) =>
+             text.Split(SentenceSeparators, NoEmptyEntries);
+
+        public static string[] GetWords(this string text) =>
+             text.Split(WordSeparators, NoEmptyEntries);
+
+        public static int GetLetterCount(this string text) =>
+             text.Count(c => char.IsLetter(c));
+
+        public static int GetCharacterCount(this string text) =>
+             text.Count(c => !char.IsControl(c));
+
         public static ReadabilityStatistics GetReadability(this string text)
         {
-            const StringSplitOptions splitOpts = StringSplitOptions.RemoveEmptyEntries;
-
-            var characters = text.Count(c => !char.IsControl(c));
-            var letters = text.Count(c => char.IsLetter(c));
-            var sentences = text.Split(SentenceSeparators, splitOpts).Length;
-            var words = text.Split(WordSeparators, splitOpts).Length;
-            var paragraphs = text.Split(ParagraphSeparators, splitOpts).Length;
+            var characters = text.GetCharacterCount();
+            var letters = text.GetLetterCount();
+            var sentences = text.GetSentences().Length;
+            var words = text.GetWords().Length;
+            var paragraphs = text.GetParagraphs().Length;
 
             // var syllables = text.CountSyllables();
 
             // var (readability, grade) = CalculateFleschKincaidReadingEase(sentences, words, syllables);
 
-            var (readability, grade) = CalculateAutomatedReadbilityIndex(sentences, words, letters);
+            var (readability, grade) = CalculateAutomatedReadabilityIndex(sentences, words, letters);
 
             return new ReadabilityStatistics(characters, letters, sentences, words, paragraphs, readability, grade);
         }
 
-        public static (double value, AutomatedReadabilityIndexGrade grade) CalculateAutomatedReadbilityIndex(
+        public static (double value, AutomatedReadabilityIndexGrade grade) CalculateAutomatedReadabilityIndex(
             int sentenceCount,
             int wordCount,
             int letterCount)

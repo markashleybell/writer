@@ -27,6 +27,7 @@ namespace writer
         {
             var assembly = typeof(MainWindow).Assembly;
 
+            /*
             IHighlightingDefinition highlightingDefinition;
 
             using var s = assembly.GetManifestResourceStream("writer.Highlighting.xshd");
@@ -39,11 +40,15 @@ namespace writer
                 extensions: new[] { ".writer", ".txt" },
                 highlighting: highlightingDefinition
             );
+            */
 
             InitializeComponent();
 
             Editor.WordWrap = true;
             Editor.Background = new SolidColorBrush(Color.FromRgb(245, 245, 245));
+
+            Editor.FontFamily = new FontFamily("Consolas");
+            Editor.FontSize = 16;
 
             SizeChanged += MainWindow_SizeChanged;
         }
