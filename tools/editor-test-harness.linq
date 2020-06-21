@@ -42,11 +42,13 @@ void Main()
     editor.FontFamily = new FontFamily("Consolas");
     editor.FontSize = 16;
     
-    editor.TextArea.TextView.LineTransformers.RemoveAt(0);
+    // editor.TextArea.TextView.LineTransformers.RemoveAt(0);
     
-    editor.TextArea.TextView.LineTransformers.Insert(0, new WriterColorizingTransformer());
+    // editor.TextArea.TextView.LineTransformers.Insert(0, new WriterColorizingTransformer());
     
-    // editor.TextArea.TextView.LineTransformers.Dump();
+    editor.TextArea.TextView.LineTransformers.Add(new WriterColorizingTransformer());
+    
+    editor.TextArea.TextView.LineTransformers.Dump();
 
     editor.Text = @"The app highlights lengthy, complex sentences and common errors; if you see a yellow sentence, shorten or split it. If you see a red highlight, your sentence is so dense and complicated that your readers will get lost trying to follow its meandering, splitting logic — try editing this sentence to remove the red.
 
