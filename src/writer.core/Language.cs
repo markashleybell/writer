@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace writer.core
@@ -10,6 +11,19 @@ namespace writer.core
 
         public static readonly Regex PassiveVoicePattern =
             new Regex(@"\b(is|are|was|were|be|been|being)\s([a-z]{2,30})\b(\sby\b)?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        public static readonly char[] Vowels = new[] { 'A', 'E', 'I', 'O', 'U', 'Y' };
+
+        public static readonly char[] WordSeparators = new[] {
+            ' ',
+            '\r',
+            '\n',
+            '\u2014' // EM dash
+        };
+
+        public static readonly char[] SentenceSeparators = new[] { '.' };
+
+        public static readonly string[] ParagraphSeparators = new[] { Environment.NewLine + Environment.NewLine };
 
         public static readonly string[] WeakeningPhrases = new[] {
             "i believe",
@@ -516,5 +530,64 @@ namespace writer.core
             { "withdrawn", "withdrew" },
             { "written", "wrote" }
         };
+
+        public static bool EndsIn(this string word, string test) =>
+        word.EndsWith(test, StringComparison.OrdinalIgnoreCase);
+
+        public static int CountSyllables(this string word)
+        {
+            var w = word.ToUpperInvariant();
+
+            var lastWasVowel = false;
+
+            var syllables = 0;
+
+            foreach (var c in w)
+            {
+                if (Vowels.Contains(c))
+                {
+                    if (!lastWasVowel)
+                    {
+                        syllables++;
+                    }
+
+                    lastWasVowel = true;
+                }
+                else
+                {
+                    lastWasVowel = false;
+                }
+            }
+
+            if ((w.EndsIn("E") || w.EndsIn("ES") || w.EndsIn("ED")) && !w.EndsIn("LE"))
+            {
+                syllables--;
+            }
+
+            return syllables;
+        }
+
+        public static ReadabilityStatistics GetReadability(this string text)
+        {
+            /*
+            RE = 206.835 – (1.015 x ASL) – (84.6 x ASW)
+
+            RE = Readability Ease
+
+            ASL = Average Sentence Length (i.e., the number of words divided by the number of sentences)
+
+            ASW = Average number of syllables per word (i.e., the number of syllables divided by the number of words)
+            */
+
+            const StringSplitOptions splitOpts = StringSplitOptions.RemoveEmptyEntries;
+
+            return new ReadabilityStatistics(
+                characters: text.Count(c => !char.IsControl(c)),
+                letters: text.Count(c => char.IsLetter(c)),
+                sentences: text.Split(SentenceSeparators, splitOpts).Length,
+                words: text.Split(WordSeparators, splitOpts).Length,
+                paragraphs: text.Split(ParagraphSeparators, splitOpts).Length
+            );
+        }
     }
 }
