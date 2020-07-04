@@ -27,21 +27,6 @@ namespace writer
         {
             var assembly = typeof(MainWindow).Assembly;
 
-            /*
-            IHighlightingDefinition highlightingDefinition;
-
-            using var s = assembly.GetManifestResourceStream("writer.Highlighting.xshd");
-            using var reader = new XmlTextReader(s);
-
-            highlightingDefinition = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-
-            HighlightingManager.Instance.RegisterHighlighting(
-                name: "Writer",
-                extensions: new[] { ".writer", ".txt" },
-                highlighting: highlightingDefinition
-            );
-            */
-
             InitializeComponent();
 
             Editor.WordWrap = true;
@@ -49,6 +34,11 @@ namespace writer
 
             Editor.FontFamily = new FontFamily("Consolas");
             Editor.FontSize = 16;
+
+            Editor.TextArea.TextView.BackgroundRenderers.Insert(1, new ColorBackgroundRenderer(Editor));
+
+            Editor.TextArea.SelectionCornerRadius = 0;
+            Editor.TextArea.SelectionBorder = null;
 
             SizeChanged += MainWindow_SizeChanged;
         }
