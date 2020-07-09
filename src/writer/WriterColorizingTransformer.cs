@@ -19,6 +19,8 @@ namespace writer
 
             highlights.AddRange(Readability(_editor, line, GetForegroundBrush));
             highlights.AddRange(PassiveVoice(_editor, line, PassiveVoiceForegroundBrush));
+            highlights.AddRange(Adverbs(_editor, line, AdverbForegroundBrush));
+            highlights.AddRange(WeakeningPhrases(_editor, line, WeakeningPhraseForegroundBrush));
 
             foreach (var highlight in highlights)
             {

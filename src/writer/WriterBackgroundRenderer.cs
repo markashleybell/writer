@@ -63,6 +63,16 @@ namespace writer
                 {
                     highlights.Add(h);
                 }
+
+                foreach (var h in Adverbs(_editor, documentLine, AdverbBackgroundBrush))
+                {
+                    highlights.Add(h);
+                }
+
+                foreach (var h in WeakeningPhrases(_editor, documentLine, WeakeningPhraseBackgroundBrush))
+                {
+                    highlights.Add(h);
+                }
             }
 
             foreach (var highlight in highlights.FindOverlappingSegments(viewStart, viewEnd - viewStart))

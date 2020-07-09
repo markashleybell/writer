@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
@@ -28,11 +29,63 @@ namespace writer
         public static SolidColorBrush HardSentenceForegroundBrush { get; set; }
             = Brushes.PaleGoldenrod;
 
+        public static SolidColorBrush AdverbBackgroundBrush { get; set; }
+            = Brushes.PaleTurquoise;
+
+        public static SolidColorBrush AdverbForegroundBrush { get; set; }
+            = Brushes.PaleTurquoise;
+
+        public static SolidColorBrush WeakeningPhraseBackgroundBrush { get; set; }
+            = Brushes.LightCyan;
+
+        public static SolidColorBrush WeakeningPhraseForegroundBrush { get; set; }
+            = Brushes.LightCyan;
+
         public static Brush GetBackgroundBrush(double readability) =>
             readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
 
         public static Brush GetForegroundBrush(double readability) =>
             readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
+
+        public static IEnumerable<Highlight> Adverbs(
+            TextEditor editor,
+            DocumentLine line,
+            Brush brush)
+        {
+            var lineText = editor.Document.GetText(line);
+
+            var matches = AdverbPattern.Matches(lineText).Where(m => {
+                var term = m.Groups[2].Value;
+
+                return !AdverbExceptions.Contains(term);
+            });
+
+            foreach (var match in matches)
+            {
+                yield return new Highlight(
+                    startOffset: line.Offset + match.Index,
+                    endOffset: line.Offset + match.Index + match.Length,
+                    brush: brush
+                );
+            }
+        }
+
+        public static IEnumerable<Highlight> WeakeningPhrases(
+            TextEditor editor,
+            DocumentLine line,
+            Brush brush)
+        {
+            var lineText = editor.Document.GetText(line);
+
+            foreach (var match in WeakeningPhrasePattern.Matches(lineText).AsEnumerable())
+            {
+                yield return new Highlight(
+                    startOffset: line.Offset + match.Index,
+                    endOffset: line.Offset + match.Index + match.Length,
+                    brush: brush
+                );
+            }
+        }
 
         public static IEnumerable<Highlight> PassiveVoice(
             TextEditor editor,

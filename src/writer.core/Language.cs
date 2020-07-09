@@ -9,10 +9,15 @@ namespace writer.core
     {
         public const StringSplitOptions NoEmptyEntries = StringSplitOptions.RemoveEmptyEntries;
 
+        public const RegexOptions RxOptions = RegexOptions.IgnoreCase | RegexOptions.Compiled;
+
         public const string PassiveSuffixPattern = "ed";
 
-        public static readonly Regex PassiveVoicePattern =
-            new Regex(@"\b(is|are|was|were|be|been|being)\s([a-z]{2,30})\b(\sby\b)?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex PassiveVoicePattern
+            = new Regex(@"\b(is|are|was|were|be|been|being)\s([a-z]{2,30})\b(\sby\b)?", RxOptions);
+
+        public static readonly Regex AdverbPattern
+            = new Regex(@"\b([a-z]+ly)\b", RxOptions);
 
         public static readonly char[] Vowels = new[] { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
@@ -66,6 +71,9 @@ namespace writer.core
             "we will try",
             "we wonder"
         };
+
+        public static readonly Regex WeakeningPhrasePattern
+            = new Regex(@"\b(" + string.Join("|", WeakeningPhrases) + @")\b", RxOptions);
 
         public static readonly Dictionary<string, string[]> Simplifications = new Dictionary<string, string[]> {
             { "a number of", new[] { "many", "some" } },
@@ -534,7 +542,7 @@ namespace writer.core
         };
 
         public static bool EndsIn(this string word, string test) =>
-        word.EndsWith(test, StringComparison.OrdinalIgnoreCase);
+            word.EndsWith(test, StringComparison.OrdinalIgnoreCase);
 
         public static int CountSyllables(this string word)
         {
