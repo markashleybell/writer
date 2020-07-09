@@ -8,7 +8,7 @@
   <Namespace>ICSharpCode.AvalonEdit.Highlighting.Xshd</Namespace>
   <Namespace>ICSharpCode.AvalonEdit.Rendering</Namespace>
   <Namespace>static writer.core.Language</Namespace>
-  <Namespace>static writer.Functions</Namespace>
+  <Namespace>static writer.Language</Namespace>
   <Namespace>System.Windows</Namespace>
   <Namespace>System.Windows.Media</Namespace>
   <Namespace>writer</Namespace>
@@ -26,7 +26,7 @@ void Main()
     editor.FontFamily = new FontFamily("Consolas");
     editor.FontSize = 16;
 
-    editor.TextArea.TextView.BackgroundRenderers.Insert(1, new ColorBackgroundRenderer(editor));
+    editor.TextArea.TextView.BackgroundRenderers.Insert(1, new WriterBackgroundRenderer(editor));
     
     // editor.TextArea.TextView.BackgroundRenderers.Dump();
 
@@ -51,29 +51,4 @@ There is a considerable range of expertise being demonstrated by the spam sender
 It was determined by the committee that the report was inconclusive.";
 
     editor.Dump();
-}
-
-public class WriterColorizingTransformer : DocumentColorizingTransformer 
-{
-    private readonly TextEditor _editor;
-
-    public WriterColorizingTransformer(TextEditor editor) =>
-        _editor = editor;
-        
-    protected override void ColorizeLine(DocumentLine line)
-    {
-        var highlights = new List<Highlight>();
-        
-        highlights.AddRange(Readability(_editor, line));
-        highlights.AddRange(PassiveVoice(_editor, line));
-        
-        foreach (var highlight in highlights)
-        {
-            base.ChangeLinePart(
-                startOffset: highlight.StartOffset,
-                endOffset: highlight.EndOffset,
-                action: el => el.TextRunProperties.SetForegroundBrush(highlight.Brush)
-            );
-        }
-    }
 }

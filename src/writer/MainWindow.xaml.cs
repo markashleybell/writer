@@ -20,7 +20,7 @@ namespace writer
             Editor.FontFamily = new FontFamily("Consolas");
             Editor.FontSize = 16;
 
-            Editor.TextArea.TextView.BackgroundRenderers.Insert(1, new ColorBackgroundRenderer(Editor));
+            Editor.TextArea.TextView.BackgroundRenderers.Insert(1, new WriterBackgroundRenderer(Editor));
 
             Editor.TextArea.SelectionCornerRadius = 0;
             Editor.TextArea.SelectionBorder = null;

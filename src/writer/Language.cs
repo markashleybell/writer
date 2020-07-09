@@ -8,9 +8,36 @@ using static writer.core.Language;
 
 namespace writer
 {
-    public static class Functions
+    public static class Language
     {
-        public static IEnumerable<Highlight> PassiveVoice(TextEditor editor, DocumentLine line)
+        public static SolidColorBrush PassiveVoiceBackgroundBrush { get; set; }
+            = Brushes.LightGreen;
+
+        public static SolidColorBrush PassiveVoiceForegroundBrush { get; set; }
+            = Brushes.LightGreen;
+
+        public static SolidColorBrush VeryHardSentenceBackgroundBrush { get; set; }
+            = Brushes.LightCoral;
+
+        public static SolidColorBrush VeryHardSentenceForegroundBrush { get; set; }
+            = Brushes.LightCoral;
+
+        public static SolidColorBrush HardSentenceBackgroundBrush { get; set; }
+            = Brushes.PaleGoldenrod;
+
+        public static SolidColorBrush HardSentenceForegroundBrush { get; set; }
+            = Brushes.PaleGoldenrod;
+
+        public static Brush GetBackgroundBrush(double readability) =>
+            readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
+
+        public static Brush GetForegroundBrush(double readability) =>
+            readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
+
+        public static IEnumerable<Highlight> PassiveVoice(
+            TextEditor editor,
+            DocumentLine line,
+            Brush brush)
         {
             var lineText = editor.Document.GetText(line);
 
@@ -26,12 +53,15 @@ namespace writer
                 yield return new Highlight(
                     startOffset: line.Offset + match.Index,
                     endOffset: line.Offset + match.Index + match.Length,
-                    brush: Brushes.LightGreen
+                    brush: brush
                 );
             }
         }
 
-        public static IEnumerable<Highlight> Readability(TextEditor editor, DocumentLine line)
+        public static IEnumerable<Highlight> Readability(
+            TextEditor editor,
+            DocumentLine line,
+            Func<double, Brush> getBrush)
         {
             var lineText = editor.Document.GetText(line);
 
@@ -47,9 +77,7 @@ namespace writer
 
                 if (score.Words > 13)
                 {
-                    var brush = score.Readability > 14
-                        ? Brushes.LightCoral
-                        : Brushes.PaleGoldenrod;
+                    var brush = getBrush(score.Readability);
 
                     yield return new Highlight(
                         startOffset: line.Offset + start,

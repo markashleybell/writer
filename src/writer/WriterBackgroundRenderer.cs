@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
-using static writer.Functions;
+using static writer.Language;
 
 namespace writer
 {
-    public class ColorBackgroundRenderer : IBackgroundRenderer
+    public class WriterBackgroundRenderer : IBackgroundRenderer
     {
         private readonly TextEditor _editor;
 
-        public ColorBackgroundRenderer(TextEditor editor) =>
+        public WriterBackgroundRenderer(TextEditor editor) =>
             _editor = editor;
 
         // Draw behind selection
@@ -55,12 +54,12 @@ namespace writer
             {
                 var documentLine = line.FirstDocumentLine;
 
-                foreach (var c in Readability(_editor, documentLine))
+                foreach (var c in Readability(_editor, documentLine, GetBackgroundBrush))
                 {
                     highlights.Add(c);
                 }
 
-                foreach (var h in PassiveVoice(_editor, documentLine))
+                foreach (var h in PassiveVoice(_editor, documentLine, PassiveVoiceBackgroundBrush))
                 {
                     highlights.Add(h);
                 }
