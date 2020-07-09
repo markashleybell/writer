@@ -5,8 +5,6 @@ namespace writer
 {
     public class Highlight : TextSegment
     {
-        public Brush Brush { get; }
-
         public Highlight(int startOffset, int endOffset, Brush brush)
         {
             StartOffset = startOffset;
@@ -14,5 +12,7 @@ namespace writer
 
             Brush = brush;
         }
+
+        public Brush Brush { get; }
     }
 }
