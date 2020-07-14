@@ -26,7 +26,7 @@ void Main()
     editor.FontFamily = new FontFamily("Consolas");
     editor.FontSize = 16;
 
-    editor.TextArea.TextView.BackgroundRenderers.Insert(1, new WriterBackgroundRenderer(editor));
+    // editor.TextArea.TextView.BackgroundRenderers.Insert(1, new WriterBackgroundRenderer(editor));
     
     // editor.TextArea.TextView.BackgroundRenderers.Dump();
 

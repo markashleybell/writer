@@ -24,7 +24,7 @@ namespace writer
 
             foreach (var highlight in highlights)
             {
-                base.ChangeLinePart(
+                ChangeLinePart(
                     startOffset: highlight.StartOffset,
                     endOffset: highlight.EndOffset,
                     action: el => el.TextRunProperties.SetForegroundBrush(highlight.Brush)

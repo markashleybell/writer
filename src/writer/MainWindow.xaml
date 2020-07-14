@@ -6,7 +6,10 @@
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:writer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="900" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="MainWindow"
+        Height="900"
+        Width="1200"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <avalonEdit:TextEditor
 				Name="Editor"

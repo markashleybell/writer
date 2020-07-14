@@ -15,37 +15,37 @@ namespace writer
             = Brushes.LightGreen;
 
         public static SolidColorBrush PassiveVoiceForegroundBrush { get; set; }
-            = Brushes.LightGreen;
+            = Brushes.DarkGreen;
 
         public static SolidColorBrush VeryHardSentenceBackgroundBrush { get; set; }
             = Brushes.LightCoral;
 
         public static SolidColorBrush VeryHardSentenceForegroundBrush { get; set; }
-            = Brushes.LightCoral;
+            = Brushes.OrangeRed;
 
         public static SolidColorBrush HardSentenceBackgroundBrush { get; set; }
             = Brushes.PaleGoldenrod;
 
         public static SolidColorBrush HardSentenceForegroundBrush { get; set; }
-            = Brushes.PaleGoldenrod;
+            = Brushes.DarkGoldenrod;
 
         public static SolidColorBrush AdverbBackgroundBrush { get; set; }
             = Brushes.PaleTurquoise;
 
         public static SolidColorBrush AdverbForegroundBrush { get; set; }
-            = Brushes.PaleTurquoise;
+            = Brushes.DarkTurquoise;
 
         public static SolidColorBrush WeakeningPhraseBackgroundBrush { get; set; }
             = Brushes.LightCyan;
 
         public static SolidColorBrush WeakeningPhraseForegroundBrush { get; set; }
-            = Brushes.LightCyan;
+            = Brushes.DarkCyan;
 
         public static Brush GetBackgroundBrush(double readability) =>
             readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
 
         public static Brush GetForegroundBrush(double readability) =>
-            readability > 14 ? VeryHardSentenceBackgroundBrush : HardSentenceBackgroundBrush;
+            readability > 14 ? VeryHardSentenceForegroundBrush : HardSentenceForegroundBrush;
 
         public static IEnumerable<Highlight> Adverbs(
             TextEditor editor,
