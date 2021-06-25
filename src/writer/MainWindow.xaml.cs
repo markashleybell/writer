@@ -15,7 +15,7 @@ namespace writer
 
             InitializeComponent();
 
-            FullScreen();
+            // FullScreen();
 
             PreviewKeyDown +=
                 (s, e) => {
