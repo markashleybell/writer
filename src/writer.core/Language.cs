@@ -14,10 +14,10 @@ namespace writer.core
         public const string PassiveSuffixPattern = "ed";
 
         public static readonly Regex PassiveVoicePattern
-            = new Regex(@"\b(is|are|was|were|be|been|being)\s([a-z]{2,30})\b(\sby\b)?", RxOptions);
+            = new(@"\b(is|are|was|were|be|been|being)\s([a-z]{2,30})\b(\sby\b)?", RxOptions);
 
         public static readonly Regex AdverbPattern
-            = new Regex(@"\b([a-z]+ly)\b", RxOptions);
+            = new(@"\b([a-z]+ly)\b", RxOptions);
 
         public static readonly char[] Vowels = new[] { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
@@ -73,9 +73,9 @@ namespace writer.core
         };
 
         public static readonly Regex WeakeningPhrasePattern
-            = new Regex(@"\b(" + string.Join("|", WeakeningPhrases) + @")\b", RxOptions);
+            = new(@"\b(" + string.Join("|", WeakeningPhrases) + @")\b", RxOptions);
 
-        public static readonly Dictionary<string, string[]> Simplifications = new Dictionary<string, string[]> {
+        public static readonly Dictionary<string, string[]> Simplifications = new() {
             { "a number of", new[] { "many", "some" } },
             { "abundance", new[] { "enough", "plenty" } },
             { "accede to", new[] { "allow", "agree to" } },
@@ -449,7 +449,7 @@ namespace writer.core
         };
 
         // E.g. "Jim was awoken by" -> "Jim awoke"
-        public static readonly Dictionary<string, string> PassiveToActiveSubstitutions = new Dictionary<string, string> {
+        public static readonly Dictionary<string, string> PassiveToActiveSubstitutions = new() {
             { "awoken", "awoke" },
             { "beaten", "beat" },
             { "begun", "began" },
@@ -655,42 +655,16 @@ namespace writer.core
             var value = 206.835 - (1.015 * averageWordsPerSentence) - (84.6 * averageSyllablesPerWord);
 
             // Start at the lowest (worst) grade, then work up
-            var grade = FleschKincaidReadingEaseGrade.Professional;
-
-            if (value >= 10)
-            {
-                grade = FleschKincaidReadingEaseGrade.CollegeGraduate;
-            }
-
-            if (value >= 30)
-            {
-                grade = FleschKincaidReadingEaseGrade.College;
-            }
-
-            if (value >= 50)
-            {
-                grade = FleschKincaidReadingEaseGrade.Grade10To12;
-            }
-
-            if (value >= 60)
-            {
-                grade = FleschKincaidReadingEaseGrade.Grade8To9;
-            }
-
-            if (value >= 70)
-            {
-                grade = FleschKincaidReadingEaseGrade.Grade7;
-            }
-
-            if (value >= 80)
-            {
-                grade = FleschKincaidReadingEaseGrade.Grade6;
-            }
-
-            if (value >= 90)
-            {
-                grade = FleschKincaidReadingEaseGrade.Grade5;
-            }
+            var grade = value switch {
+                < 10 => FleschKincaidReadingEaseGrade.Professional,
+                < 30 => FleschKincaidReadingEaseGrade.CollegeGraduate,
+                < 50 => FleschKincaidReadingEaseGrade.College,
+                < 60 => FleschKincaidReadingEaseGrade.Grade10To12,
+                < 70 => FleschKincaidReadingEaseGrade.Grade8To9,
+                < 80 => FleschKincaidReadingEaseGrade.Grade7,
+                < 90 => FleschKincaidReadingEaseGrade.Grade6,
+                _ => FleschKincaidReadingEaseGrade.Grade5
+            };
 
             return (value, grade);
         }
